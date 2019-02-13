@@ -1,6 +1,6 @@
 #include "FirstBossState.h"
 #include "Boss.h"
-
+#include "Boss1Attack.h"
 
 FirstBossState::FirstBossState()
 {
@@ -14,13 +14,26 @@ FirstBossState::~FirstBossState()
 
 void FirstBossState::changeToIdleState(Boss* boss)
 {
+	boss->setState(new Idling4FirstBoss);
 }
 
 void FirstBossState::changeToFlameSplit(Boss* boss)
 {
+	boss->setState(new FlameSplit4FirstBoss);
 }
 
-Idling4FirstBoss::Idling4FirstBoss(): cooldownBeforeNextAbility{5.f}
+void FirstBossState::changeToFlameThrower(Boss* boss)
+{
+	boss->setState(new FlameThrower4FirstBoss);
+}
+
+void FirstBossState::changeToSuckingBullet(Boss* boss)
+{
+	boss->setState(new SuckingAbility4FirstBoss);
+}
+
+
+Idling4FirstBoss::Idling4FirstBoss() : cooldownBeforeNextAbility{ 3.f }
 {
 
 }
@@ -32,20 +45,32 @@ void Idling4FirstBoss::update(const float &deltaT, Boss *bossInstance)
 
 	if (cooldownBeforeNextAbility <= 0)
 	{
-		changeToFlameSplit(bossInstance);
+		chooseRandomAbility(bossInstance);
 	}
 }
 
-void Idling4FirstBoss::chooseRandomAbility()
+void Idling4FirstBoss::chooseRandomAbility(Boss *bossInstance)
 {
-
+	const int randomNum = cocos2d::RandomHelper::random_int(1, 3);
+	switch (randomNum)
+	{
+	case 1:
+		changeToFlameThrower(bossInstance);
+		break;
+	case 2:
+		changeToFlameSplit(bossInstance);
+		break;
+	case 3:
+		changeToSuckingBullet(bossInstance);
+		break;
+	default:
+		throw;
+	}
 }
 
-void Idling4FirstBoss::changeToFlameSplit(Boss* boss)
-{
-	boss->setState(new FlameSplit4FirstBoss);
-	delete this;
-}
+
+
+
 
 FlameSplit4FirstBoss::FlameSplit4FirstBoss()
 {
@@ -61,14 +86,51 @@ void FlameSplit4FirstBoss::update(const float &deltaT, Boss *bossInstance)
 	else if (*currentState == performingAbility)
 	{
 		//Shoot a lava ball
+		bossInstance->spewLava();
 
 		//return to idle state
 		changeToIdleState(bossInstance);
 	}
 }
 
-void FlameSplit4FirstBoss::changeToIdleState(Boss* boss)
+
+
+
+
+FlameThrower4FirstBoss::FlameThrower4FirstBoss()
 {
-	boss->setState(new Idling4FirstBoss);
-	delete this;
+	*currentState = performingAbility;
 }
+
+void FlameThrower4FirstBoss::update(const float& deltaT, Boss* bossInstance)
+{
+	if (*currentState == charging)
+	{
+
+	}
+	else if (*currentState == performingAbility)
+	{
+		bossInstance->activateFlameThrower();
+		changeToIdleState(bossInstance);
+	}
+}
+
+SuckingAbility4FirstBoss::SuckingAbility4FirstBoss()
+{
+	*currentState = performingAbility;
+}
+
+void SuckingAbility4FirstBoss::update(const float& deltaT, Boss* bossInstance)
+{
+	if (*currentState == charging)
+	{
+
+	}
+	else if (*currentState == performingAbility)
+	{
+		bossInstance->shootSucker();
+		changeToIdleState(bossInstance);
+	}
+}
+
+

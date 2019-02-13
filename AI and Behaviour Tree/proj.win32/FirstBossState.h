@@ -14,6 +14,8 @@ public:
 	virtual ~FirstBossState();
 	virtual void update(const float &deltaT, Boss *bossInstance) = 0;
 
+	//Only Idle state is allow to change publicly
+	virtual void changeToIdleState(Boss *boss);
 protected:
 	enum State
 	{
@@ -23,8 +25,10 @@ protected:
 	State *currentState{nullptr};
 
 	//Utility Functions
-	virtual void changeToIdleState(Boss *boss);
+	
 	virtual void changeToFlameSplit(Boss *boss);
+	virtual void changeToFlameThrower(Boss *boss);
+	virtual void changeToSuckingBullet(Boss *boss);
 };
 
 /*
@@ -44,10 +48,7 @@ private:
 	 * List	of utility functions
 	 * 1. Choose a random ability
 	 */
-	void chooseRandomAbility();
-
-
-	void changeToFlameSplit(Boss* boss) override;
+	void chooseRandomAbility(Boss *bossInstance);
 };
 
 /*
@@ -59,5 +60,21 @@ public:
 	FlameSplit4FirstBoss();
 	void update(const float &deltaT, Boss *bossInstance) override;
 private:
-	void changeToIdleState(Boss* boss) override;
+};
+
+class FlameThrower4FirstBoss : public FirstBossState
+{
+public:
+	FlameThrower4FirstBoss();
+
+	void update(const float& deltaT, Boss* bossInstance) override;
+private:
+};
+
+class SuckingAbility4FirstBoss: public FirstBossState
+{
+public:
+	SuckingAbility4FirstBoss();
+
+	void update(const float& deltaT, Boss* bossInstance) override;
 };

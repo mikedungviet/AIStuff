@@ -2,13 +2,19 @@
 #include "FirstBossState.h"
 #include <2d/CCSprite.h>
 
+
+class Boss1LavaAttack;
+
 class Boss
 {
 private:
 	FirstBossState *state{ nullptr };
 	cocos2d::Sprite *bossSprite{ nullptr };
+	std::vector<Boss1LavaAttack*> lavaList;
+	const cocos2d::Vec2 mouthPosition;
+
 public:
-	Boss();
+	Boss(/*Need a hero pointer*/);
 	~Boss();
 
 	//Setters
@@ -16,12 +22,18 @@ public:
 
 	//Getters
 	cocos2d::Sprite* getSprite()const;
-	
-	//Change the state
-	//void changeToIdleState();
+	std::vector<Boss1LavaAttack*> getLavaList() const;
+	cocos2d::Vec2 getMouthPosition()const;
 
-	//
-	void update(const float &deltaT);
-	
+	//State changes and update
+	void update(const float &deltaT, const cocos2d::Vec2 &heroPosition);
+
+	//Attack functions
+	void spewLava();
+	void activateFlameThrower();
+	void shootSucker();
+
+	//Utility functions
+	void removeFromLavaList(Boss1LavaAttack *elementToRemove);
 };
 

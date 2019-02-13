@@ -26,13 +26,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	auto director = Director::getInstance();
 	auto glView = director->getOpenGLView();
 	if (!glView) {
-		glView = GLViewImpl::create("Hello World");
-		glView->setFrameSize(640, 480);
+		glView = GLViewImpl::createWithRect("Hello World", cocos2d::Rect(0, 0, 1920, 1080));
 		director->setOpenGLView(glView);
 	}
 
-	auto scene = HelloWorld::createScene();
-	director->runWithScene(scene);
+	//auto scene = HelloWorld::createScene();
+	director->runWithScene(HelloWorld::createScene());
+	
 
 	return true;
 }
