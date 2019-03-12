@@ -22,8 +22,10 @@ bool HelloWorld::init()
    
 	flame = new FlameThrower;
 	this->addChild(flame->getSprite());
+	this->addChild(flame->getHitBox());
 
-	//this->scheduleUpdate();
+
+	this->scheduleUpdate();
     return true;
 }
 
