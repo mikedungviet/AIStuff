@@ -1,35 +1,41 @@
 #include "HelloWorldScene.h"
+#include "Animation.h"
+
 
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
 {
-    // 'scene' is an autorelease object
-    auto scene = Scene::create();
-    const auto layer = HelloWorld::create();
+	// 'scene' is an autorelease object
+	auto scene = Scene::create();
+	auto layer = HelloWorld::create();
 
-    scene->addChild(layer);
+	scene->addChild(layer);
 
-    return scene;
+	return scene;
 }
 
 bool HelloWorld::init()
 {
-    if ( !Scene::init() )
-    {
-        return false;
-    }
-   
-	flame = new FlameThrower;
-	this->addChild(flame->getSprite());
-	this->addChild(flame->getHitBox());
+	if (!Scene::init())
+	{
+		return false;
+	}
+	marcos::AnimationManager::init();
 
+	firstBoss = new Boss(this);
+
+	//addChild(firstBoss->getSprite());
+
+
+
+	//attack = new LavaBall(Vec2(1000, 0), Vec2(100, 500));
 
 	this->scheduleUpdate();
-    return true;
+	return true;
 }
 
-void HelloWorld::update(float deltaTime)
+void HelloWorld::update(float delta)
 {
-	flame->update(deltaTime);
+	firstBoss->update(delta, cocos2d::Vec2(1000, 0));
 }

@@ -149,24 +149,26 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Classes\Animation.cpp" />
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Boss.cpp" />
+    <ClCompile Include="..\Classes\Boss1Attack.cpp" />
+    <ClCompile Include="..\Classes\FirstBossState.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\HitBox.cpp" />
     <ClCompile Include="..\Classes\TreeNode.cpp" />
-    <ClCompile Include="Boss1Attack.cpp" />
-    <ClCompile Include="FirstBossState.cpp" />
-    <ClCompile Include="HitBox.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Classes\Animation.h" />
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\BehaviourTreeNodes.h" />
     <ClInclude Include="..\Classes\Boss.h" />
+    <ClInclude Include="..\Classes\Boss1Attack.h" />
+    <ClInclude Include="..\Classes\FirstBossState.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
+    <ClInclude Include="..\Classes\HitBox.h" />
     <ClInclude Include="..\Classes\TreeNode.h" />
-    <ClInclude Include="Boss1Attack.h" />
-    <ClInclude Include="FirstBossState.h" />
-    <ClInclude Include="HitBox.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
