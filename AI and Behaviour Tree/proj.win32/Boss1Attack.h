@@ -1,7 +1,7 @@
 #pragma once
 #include <math/Vec2.h>
 #include <2d/CCSprite.h>
-#include <2d/CCScene.h>
+#include "HitBox.h"
 
 
 class Boss;
@@ -11,21 +11,17 @@ class Boss1LavaAttack
 protected:
 	//Data variables
 	Boss *bossPointer;
-	cocos2d::Rect hitBox;
-	float width, height;
 	cocos2d::Vec2 position, velocity, acceleration;
-	cocos2d::DrawNode *hitBoxShape;
 	cocos2d::Sprite *sprite;
+	HitBox *hitBox;
 
 	//Protected Variables
 	Boss1LavaAttack(Boss *bossInstance);
-
-	//Utility functions
-	void redrawHitBox();
 public:
 	virtual ~Boss1LavaAttack();
 	virtual void update(const float &deltaT) = 0;
-	virtual cocos2d::Rect getHitBox() const;
+	//Getters
+	cocos2d::Rect getHitBox() const;
 
 };
 

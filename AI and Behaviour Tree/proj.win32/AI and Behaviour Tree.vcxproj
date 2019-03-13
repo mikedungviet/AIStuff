@@ -155,6 +155,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\TreeNode.cpp" />
     <ClCompile Include="Boss1Attack.cpp" />
     <ClCompile Include="FirstBossState.cpp" />
+    <ClCompile Include="HitBox.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\TreeNode.h" />
     <ClInclude Include="Boss1Attack.h" />
     <ClInclude Include="FirstBossState.h" />
+    <ClInclude Include="HitBox.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>

@@ -21,9 +21,7 @@ bool HelloWorld::init()
 		return false;
 	}
 
-	firstBoss = new Boss;
-	firstBoss->getSprite()->setPosition(0, 0);
-	firstBoss->getSprite()->setAnchorPoint(Vec2(0, 0));
+	firstBoss = new Boss(this);
 
 	addChild(firstBoss->getSprite());
 

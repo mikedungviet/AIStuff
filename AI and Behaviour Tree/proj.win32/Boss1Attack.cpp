@@ -1,34 +1,37 @@
 #include "Boss1Attack.h"
-#include <cmath>
-#include <base/CCDirector.h>
 #include "Boss.h"
 
-Boss1LavaAttack::Boss1LavaAttack(Boss* bossInstance) : bossPointer(bossInstance), hitBoxShape(cocos2d::DrawNode::create())
-{
-	cocos2d::Director::getInstance()->getRunningScene()->addChild(hitBoxShape);
-}
+/********************************************************************************************************
+ *
+ *
+ *										Boss Lava Attack Functions
+ *
+ *
+ *******************************************************************************************************/
 
-void Boss1LavaAttack::redrawHitBox()
+Boss1LavaAttack::Boss1LavaAttack(Boss* bossInstance) : bossPointer(bossInstance)
 {
-	//Change the hit box
-	hitBox.setRect(position.x - width / 2, position.y - height / 2, width, height);
-
-	//redraw the hit box
-	hitBoxShape->clear();
-	hitBoxShape->drawRect(cocos2d::Vec2(hitBox.getMinX(), hitBox.getMinY()), cocos2d::Vec2(hitBox.getMaxX(), hitBox.getMaxY()), cocos2d::Color4F(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 Boss1LavaAttack::~Boss1LavaAttack()
 {
-	cocos2d::Director::getInstance()->getRunningScene()->removeChild(hitBoxShape);
+	delete hitBox;
 }
 
 
 cocos2d::Rect Boss1LavaAttack::getHitBox() const
 {
-	return hitBox;
+	return hitBox->hitBox;
 }
 
+
+/********************************************************************************************************
+ *
+ *
+ *										Lava Ball Functions
+ *
+ *
+ *******************************************************************************************************/
 LavaBall::LavaBall(const cocos2d::Vec2& heroPosition, int order, Boss *bossInstance)
 	: Boss1LavaAttack(bossInstance)
 {
@@ -54,21 +57,20 @@ LavaBall::LavaBall(const cocos2d::Vec2& heroPosition, int order, Boss *bossInsta
 
 	//Set Position for the lava ball
 	sprite->setPosition(position);
-	cocos2d::Director::getInstance()->getRunningScene()->addChild(sprite);
+	bossPointer->getBossScene()->addChild(sprite);
 
 	//Set physic variables
 	acceleration.set(1250, 0);
 	velocity.set(500, 0);
 
 	//Set sprite size
-	height = 50;
-	width = 50;
+	hitBox = new HitBox(bossPointer->getBossScene(), 50.f, 50);
 }
 
 LavaBall::~LavaBall()
 {
 	bossPointer->removeFromLavaList(this);
-	cocos2d::Director::getInstance()->getRunningScene()->removeChild(sprite);
+	bossPointer->getBossScene()->removeChild(sprite);
 }
 
 void LavaBall::update(const float& deltaT)
@@ -90,28 +92,33 @@ void LavaBall::update(const float& deltaT)
 			return;
 		}
 		sprite->setPosition(position);
-		redrawHitBox();
+		hitBox->updateHitBox(position);
 	}
 }
 
-
+/********************************************************************************************************
+ *
+ *
+ *										Flame Thrower Functions
+ *
+ *
+ *******************************************************************************************************/
 
 FlameThrower::FlameThrower(Boss *bossInstance) : Boss1LavaAttack(bossInstance), onTime(1.0f), drawNode(cocos2d::DrawNode::create())
 {
 	position.set(960, 500);
 	sprite = cocos2d::Sprite::create("FlameThrower.png");
 	sprite->setPosition(position);
-	cocos2d::Director::getInstance()->getRunningScene()->addChild(sprite);
+	bossPointer->getBossScene()->addChild(sprite);
 
 	//Setup hit box
-	width = 1920;
-	height = 450;
+	hitBox = new HitBox(bossPointer->getBossScene(), 450, 1920);
 }
 
 FlameThrower::~FlameThrower()
 {
 	bossPointer->removeFromLavaList(this);
-	cocos2d::Director::getInstance()->getRunningScene()->removeChild(sprite);
+	bossPointer->getBossScene()->removeChild(sprite);
 }
 
 void FlameThrower::update(const float& deltaT)
@@ -120,24 +127,38 @@ void FlameThrower::update(const float& deltaT)
 	{
 		waitingTime -= deltaT;
 	}
-	else 
+	else
 	{
 		onTime -= deltaT;
-		if (onTime <= 0) 
+		if (onTime <= 0)
 		{
 			delete this;
 			return;
 		}
-		redrawHitBox();
+		hitBox->updateHitBox(position);
 	}
 }
+
+
+/********************************************************************************************************
+ *
+ *
+ *										Sucking Bullet Functions
+ *
+ *
+ *******************************************************************************************************/
+
 
 SuckerBullet::SuckerBullet(const cocos2d::Vec2& heroLocation, Boss* bossInstance) : Boss1LavaAttack(bossInstance), currentPosition(bossInstance->getMouthPosition())
 {
 	//Set up the sprite
 	sprite = cocos2d::Sprite::create("LavaBall.png");
-	sprite->setPosition(bossInstance->getMouthPosition());
-	cocos2d::Director::getInstance()->getRunningScene()->addChild(sprite);
+	position.set(bossInstance->getMouthPosition());
+	sprite->setPosition(position);
+	bossPointer->getBossScene()->addChild(sprite);
+
+	//Set up hit box
+	hitBox = new HitBox(bossPointer->getBossScene(), 50.f, 50);
 
 	//set up the physics
 	cocos2d::Vec2 tempVector = heroLocation - bossInstance->getMouthPosition();
@@ -150,20 +171,22 @@ SuckerBullet::SuckerBullet(const cocos2d::Vec2& heroLocation, Boss* bossInstance
 SuckerBullet::~SuckerBullet()
 {
 	bossPointer->removeFromLavaList(this);
-	cocos2d::Director::getInstance()->getRunningScene()->removeChild(sprite);
+	bossPointer->getBossScene()->removeChild(sprite);
 }
 
 void SuckerBullet::update(const float& deltaT)
 {
-	lastPosition = currentPosition;
-	currentPosition += bulletVelocity * deltaT;
+	lastPosition = position;
+	position += bulletVelocity * deltaT;
 
-	sprite->setPosition(currentPosition);
+	sprite->setPosition(position);
 
-	traveledLength += (lastPosition - currentPosition).getLength();
+	traveledLength += (lastPosition - position).getLength();
 
 	if (lengthVector <= traveledLength)
 	{
 		delete this;
+		return;
 	}
+	hitBox->updateHitBox(position);
 }

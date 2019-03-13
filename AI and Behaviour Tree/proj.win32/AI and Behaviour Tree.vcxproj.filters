@@ -29,6 +29,7 @@
     </ClCompile>
     <ClCompile Include="FirstBossState.cpp" />
     <ClCompile Include="Boss1Attack.cpp" />
+    <ClCompile Include="HitBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -51,6 +52,7 @@
     </ClInclude>
     <ClInclude Include="FirstBossState.h" />
     <ClInclude Include="Boss1Attack.h" />
+    <ClInclude Include="HitBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
